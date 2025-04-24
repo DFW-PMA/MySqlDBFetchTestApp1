@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		F0ED718E2DBAD22B002E70FA /* MySQLKit in Frameworks */ = {isa = PBXBuildFile; productRef = F0ED718D2DBAD22B002E70FA /* MySQLKit */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		F01EE6A62DBAA35800453C08 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -65,6 +69,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F0ED718E2DBAD22B002E70FA /* MySQLKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -125,6 +130,7 @@
 			);
 			name = MySqlDBFetchTestApp1;
 			packageProductDependencies = (
+				F0ED718D2DBAD22B002E70FA /* MySQLKit */,
 			);
 			productName = MySqlDBFetchTestApp1;
 			productReference = F01EE6972DBAA35500453C08 /* MySqlDBFetchTestApp1.app */;
@@ -208,6 +214,9 @@
 			);
 			mainGroup = F01EE68E2DBAA35500453C08;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				F0ED718C2DBAD22B002E70FA /* XCRemoteSwiftPackageReference "mysql-kit" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = F01EE6982DBAA35500453C08 /* Products */;
 			projectDirPath = "";
@@ -405,7 +414,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = MySqlDBFetchTestApp1/MySqlDBFetchTestApp1.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 01.06.25C114;
+				CURRENT_PROJECT_VERSION = 01.07.25C114;
 				DEVELOPMENT_TEAM = J434W9VGHF;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -452,7 +461,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = MySqlDBFetchTestApp1/MySqlDBFetchTestApp1.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 01.06.25C114;
+				CURRENT_PROJECT_VERSION = 01.07.25C114;
 				DEVELOPMENT_TEAM = J434W9VGHF;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -622,6 +631,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		F0ED718C2DBAD22B002E70FA /* XCRemoteSwiftPackageReference "mysql-kit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/vapor/mysql-kit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		F0ED718D2DBAD22B002E70FA /* MySQLKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F0ED718C2DBAD22B002E70FA /* XCRemoteSwiftPackageReference "mysql-kit" */;
+			productName = MySQLKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = F01EE68F2DBAA35500453C08 /* Project object */;
 }

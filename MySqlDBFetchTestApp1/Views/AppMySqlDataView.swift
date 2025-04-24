@@ -29,6 +29,7 @@ struct AppMySqlDataView: View
 
     @Environment(\.presentationMode) var presentationMode
 
+    var mySqlDatabaseManager:MySqlDatabaseManager = MySqlDatabaseManager.ClassSingleton.appMySqlDatabaseManager
 //  var jmAppDelegateVisitor:JmAppDelegateVisitor = JmAppDelegateVisitor.ClassSingleton.appDelegateVisitor
     
     init()
@@ -73,6 +74,7 @@ struct AppMySqlDataView: View
     {
         
         let _ = self.xcgLogMsg("\(ClassInfo.sClsDisp):body' \(JmXcodeBuildSettings.jmAppVersionAndBuildNumber)...")
+        let _ = self.xcgLogMsg("\(ClassInfo.sClsDisp):body' 'self.mySqlDatabaseManager' is [\(self.mySqlDatabaseManager.toString())]...")
 
         VStack
         {
