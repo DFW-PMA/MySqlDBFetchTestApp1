@@ -8,6 +8,7 @@
 
 import Foundation
 import SwiftUI
+import MySQLKit
 
 @available(iOS 14.0, *)
 struct AppMySqlDataView: View 
@@ -17,7 +18,7 @@ struct AppMySqlDataView: View
     {
         
         static let sClsId        = "AppMySqlDataView"
-        static let sClsVers      = "v1.0101"
+        static let sClsVers      = "v1.0201"
         static let sClsDisp      = sClsId+".("+sClsVers+"): "
         static let sClsCopyRight = "Copyright © JustMacApps 2023-2025. All rights reserved."
         static let bClsTrace     = true
@@ -29,8 +30,13 @@ struct AppMySqlDataView: View
 
     @Environment(\.presentationMode) var presentationMode
 
-    var mySqlDatabaseManager:MySqlDatabaseManager = MySqlDatabaseManager.ClassSingleton.appMySqlDatabaseManager
-//  var jmAppDelegateVisitor:JmAppDelegateVisitor = JmAppDelegateVisitor.ClassSingleton.appDelegateVisitor
+    @State      private var isAppRunSQLStatementAlertShowing:Bool     = false
+  
+    @State      private var sSqlSelectStatement:String                = 
+                            "select * from visit where tid = 261 and vdate between \"2025-04-22\" and \"2025-04-25\" and type != 32;"
+
+                        var mySqlDatabaseManager:MySqlDatabaseManager = MySqlDatabaseManager.ClassSingleton.appMySqlDatabaseManager
+//                      var jmAppDelegateVisitor:JmAppDelegateVisitor = JmAppDelegateVisitor.ClassSingleton.appDelegateVisitor
     
     init()
     {
@@ -155,10 +161,112 @@ struct AppMySqlDataView: View
 
             Spacer()
 
+            HStack(alignment:.center)
+            {
+
+                Spacer()
+
+                Button
+                {
+
+                    let _ = self.xcgLogMsg("\(ClassInfo.sClsDisp):Button(Xcode).'Run SQL Statement' pressed...")
+
+                    self.isAppRunSQLStatementAlertShowing.toggle()
+
+                }
+                label:
+                {
+
+                    VStack(alignment:.center)
+                    {
+
+                        Label("", systemImage: "figure.run.circle")
+                            .help(Text("Run the 'test' SQL statement..."))
+                            .imageScale(.large)
+
+                        HStack(alignment:.center)
+                        {
+
+                            Spacer()
+
+                            Text("Run SQL...")
+                                .font(.caption)
+                                .foregroundColor(.red)
+
+                            Spacer()
+
+                        }
+
+                    }
+
+                }
+            //  .alert(selectedReportValues.sSelectedReportAlertTitle,
+            //         isPresented:$isAppRunBigTestRunReportShowing,
+            //         presenting: selectedReportValues)
+                .alert("Run the 'test' SQL statement?", isPresented:$isAppRunSQLStatementAlertShowing)
+                {
+
+                    Button("Cancel", role:.cancel)
+                    {
+                        let _ = self.xcgLogMsg("\(ClassInfo.sClsDisp) User pressed 'Cancel' to 'run' the SQL statement - resuming...")
+                    }
+                    Button("Ok")
+                    {
+
+                        let _ = self.xcgLogMsg("\(ClassInfo.sClsDisp) User pressed 'Ok' to 'run' the SQL statement - running...")
+
+                        self.executeMySqlTestStatement()
+
+                    //  self.presentationMode.wrappedValue.dismiss()
+
+                    }
+
+                }
+            //  message:
+            //  { selected in
+            //
+            //      Text(selected.sSelectedReportAlertMessage)
+            //
+            //  }
+            #if os(macOS)
+                .buttonStyle(.borderedProminent)
+            //  .background(???.isPressed ? .blue : .gray)
+                .cornerRadius(10)
+                .foregroundColor(Color.primary)
+            #endif
+
+            }
+
+            Spacer()
+
         }
         .padding()
         
     }
+
+    private func executeMySqlTestStatement()
+    {
+
+        let sCurrMethod:String = #function
+        let sCurrMethodDisp    = "\(ClassInfo.sClsDisp)'"+sCurrMethod+"':"
+        
+        self.xcgLogMsg("\(sCurrMethodDisp) Invoked...")
+
+        // Issue the 'test' SQL 'query' statement and display the results in the log...
+
+        self.xcgLogMsg("\(sCurrMethodDisp) Calling 'self.mySqlDatabaseManager.executeQuery(query:)' with a SQL 'test' statement 'self.sSqlSelectStatement' of [\(self.sSqlSelectStatement)]...")
+
+        let mySqlResultRows:[MySQLRow] = self.mySqlDatabaseManager.executeQuery(query:self.sSqlSelectStatement)
+
+        self.xcgLogMsg("\(sCurrMethodDisp) Called  'self.mySqlDatabaseManager.executeQuery(query:)' with a SQL 'test' statement 'self.sSqlSelectStatement' of [\(self.sSqlSelectStatement)] with returned result(s) 'mySqlResultRows' of [\(mySqlResultRows)]...")
+
+        // Exit...
+
+        self.xcgLogMsg("\(sCurrMethodDisp) Exiting...")
+
+        return
+
+    }   // End of private func executeMySqlTestStatement().
     
 }   // End of struct AppMySqlDataView(View). 
 
