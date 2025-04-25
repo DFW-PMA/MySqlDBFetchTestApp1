@@ -18,7 +18,7 @@ struct AppMySqlDataView: View
     {
         
         static let sClsId        = "AppMySqlDataView"
-        static let sClsVers      = "v1.0201"
+        static let sClsVers      = "v1.0205"
         static let sClsDisp      = sClsId+".("+sClsVers+"): "
         static let sClsCopyRight = "Copyright © JustMacApps 2023-2025. All rights reserved."
         static let bClsTrace     = true
@@ -215,8 +215,13 @@ struct AppMySqlDataView: View
 
                         let _ = self.xcgLogMsg("\(ClassInfo.sClsDisp) User pressed 'Ok' to 'run' the SQL statement - running...")
 
-                        self.executeMySqlTestStatement()
-
+                        Task
+                        {
+                            
+                            await self.executeMySqlTestStatement()
+                            
+                        }
+                        
                     //  self.presentationMode.wrappedValue.dismiss()
 
                     }
@@ -244,7 +249,7 @@ struct AppMySqlDataView: View
         
     }
 
-    private func executeMySqlTestStatement()
+    private func executeMySqlTestStatement() async
     {
 
         let sCurrMethod:String = #function
@@ -256,17 +261,28 @@ struct AppMySqlDataView: View
 
         self.xcgLogMsg("\(sCurrMethodDisp) Calling 'self.mySqlDatabaseManager.executeQuery(query:)' with a SQL 'test' statement 'self.sSqlSelectStatement' of [\(self.sSqlSelectStatement)]...")
 
-        let mySqlResultRows:[MySQLRow] = self.mySqlDatabaseManager.executeQuery(query:self.sSqlSelectStatement)
-
-        self.xcgLogMsg("\(sCurrMethodDisp) Called  'self.mySqlDatabaseManager.executeQuery(query:)' with a SQL 'test' statement 'self.sSqlSelectStatement' of [\(self.sSqlSelectStatement)] with returned result(s) 'mySqlResultRows' of [\(mySqlResultRows)]...")
-
+        do
+        {
+            
+            let mySqlResultRows:[MySQLRow] = try await self.mySqlDatabaseManager.executeQuery(query:self.sSqlSelectStatement)
+            
+            self.xcgLogMsg("\(sCurrMethodDisp) Called  'self.mySqlDatabaseManager.executeQuery(query:)' with a SQL 'test' statement 'self.sSqlSelectStatement' of [\(self.sSqlSelectStatement)] with returned result(s) 'mySqlResultRows' of [\(mySqlResultRows)]...")
+            
+        }
+        catch
+        {
+            
+            self.xcgLogMsg("\(sCurrMethodDisp) Called  'self.mySqlDatabaseManager.executeQuery(query:)' with a SQL 'test' statement 'self.sSqlSelectStatement' of [\(self.sSqlSelectStatement)] -  statement execution failed...")
+            
+        }
+        
         // Exit...
 
         self.xcgLogMsg("\(sCurrMethodDisp) Exiting...")
 
         return
 
-    }   // End of private func executeMySqlTestStatement().
+    }   // End of private func executeMySqlTestStatement() async.
     
 }   // End of struct AppMySqlDataView(View). 
 
