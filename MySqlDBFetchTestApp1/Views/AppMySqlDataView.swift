@@ -18,7 +18,7 @@ struct AppMySqlDataView: View
     {
         
         static let sClsId        = "AppMySqlDataView"
-        static let sClsVers      = "v1.0205"
+        static let sClsVers      = "v1.0310"
         static let sClsDisp      = sClsId+".("+sClsVers+"): "
         static let sClsCopyRight = "Copyright © JustMacApps 2023-2025. All rights reserved."
         static let bClsTrace     = true
@@ -30,10 +30,14 @@ struct AppMySqlDataView: View
 
     @Environment(\.presentationMode) var presentationMode
 
+                private var bInternalTest:Bool                        = false
+
     @State      private var isAppRunSQLStatementAlertShowing:Bool     = false
   
     @State      private var sSqlSelectStatement:String                = 
                             "select * from visit where tid = 261 and vdate between \"2025-04-22\" and \"2025-04-25\" and type != 32;"
+
+    @State      private var listMySQLResultRows:[[String:Any]]        = [[String:Any]]()
 
                         var mySqlDatabaseManager:MySqlDatabaseManager = MySqlDatabaseManager.ClassSingleton.appMySqlDatabaseManager
 //                      var jmAppDelegateVisitor:JmAppDelegateVisitor = JmAppDelegateVisitor.ClassSingleton.appDelegateVisitor
@@ -85,8 +89,6 @@ struct AppMySqlDataView: View
         VStack
         {
 
-            Spacer()
-
             HStack(alignment:.center)
             {
 
@@ -126,7 +128,7 @@ struct AppMySqlDataView: View
 
             }
 
-            Spacer()
+        //  Spacer()
 
             if #available(iOS 17.0, *)
             {
@@ -136,7 +138,7 @@ struct AppMySqlDataView: View
                     .scaledToFit()
                     .containerRelativeFrame(.horizontal)
                         { size, axis in
-                            size * 0.080
+                            size * 0.040
                         }
 
             }
@@ -146,20 +148,21 @@ struct AppMySqlDataView: View
                 Image(ImageResource(name: "Gfx/AppIcon", bundle: Bundle.main))
                     .resizable()
                     .scaledToFit()
-                    .frame(width:80, height: 80, alignment:.center)
+                    .frame(width:40, height: 40, alignment:.center)
 
             }
 
-            Spacer()
-
+            Text("")
             Text("\(JmXcodeBuildSettings.jmAppDisplayName)")
                 .bold()
             Text("")
-            Text("...placeholder...")
-                .bold()
-                .italic()
-
-            Spacer()
+            Text("")
+            Text("SQL Statement to 'test':")
+            Text("")
+            Text("[\(self.sSqlSelectStatement)]")
+                .font(.caption)
+            Text("")
+            Text("")
 
             HStack(alignment:.center)
             {
@@ -189,7 +192,7 @@ struct AppMySqlDataView: View
 
                             Spacer()
 
-                            Text("Run SQL...")
+                            Text("'test' the SQL Statement...")
                                 .font(.caption)
                                 .foregroundColor(.red)
 
@@ -200,9 +203,6 @@ struct AppMySqlDataView: View
                     }
 
                 }
-            //  .alert(selectedReportValues.sSelectedReportAlertTitle,
-            //         isPresented:$isAppRunBigTestRunReportShowing,
-            //         presenting: selectedReportValues)
                 .alert("Run the 'test' SQL statement?", isPresented:$isAppRunSQLStatementAlertShowing)
                 {
 
@@ -218,6 +218,8 @@ struct AppMySqlDataView: View
                         Task
                         {
                             
+                        //  self.listMySQLResultRows = await self.executeMySqlTestStatement()
+                            
                             await self.executeMySqlTestStatement()
                             
                         }
@@ -227,12 +229,6 @@ struct AppMySqlDataView: View
                     }
 
                 }
-            //  message:
-            //  { selected in
-            //
-            //      Text(selected.sSelectedReportAlertMessage)
-            //
-            //  }
             #if os(macOS)
                 .buttonStyle(.borderedProminent)
             //  .background(???.isPressed ? .blue : .gray)
@@ -240,6 +236,93 @@ struct AppMySqlDataView: View
                 .foregroundColor(Color.primary)
             #endif
 
+            }
+
+            Text("")
+            Text("")
+
+            HStack(alignment:.center)
+            {
+
+                Spacer()
+
+                Text("The current 'result' set has")
+                Text("#(\(self.listMySQLResultRows.count))")
+                    .foregroundStyle((self.listMySQLResultRows.count > 0) ? .green : .red)
+                Text("row(s)...")
+
+                Spacer()
+
+            }
+
+            Text("")
+            Text("")
+
+            if (self.listMySQLResultRows.count > 0)
+            {
+            
+                ScrollView
+                {
+
+                    VStack(alignment:.leading)
+                    {
+
+                        Grid(alignment:.leadingFirstTextBaseline, horizontalSpacing:5, verticalSpacing: 3)
+                        {
+
+                            // Column Headings:
+
+                            GridRow 
+                            {
+
+                                Text("TID")
+                                    .underline()
+                                Text("PID")
+                                    .underline()
+                                Text("SID")
+                                    .underline()
+                                Text("Type")
+                                    .underline()
+                                Text("VDate")
+                                    .underline()
+                                Text("VTime")
+                                    .underline()
+
+                            }
+                            .font(.footnote) 
+
+                            // Item Rows:
+
+                        //  List(self.listMySQLResultRows, id:\.self)
+                        //  ForEach(self.listMySQLResultRows, id:\.self)
+                        //  List(self.listMySQLResultRows)
+                            ForEach(0..<self.listMySQLResultRows.count, id:\.self)
+                            { index in
+                                
+                                let dictSqlResultRow = self.listMySQLResultRows[index]
+
+                                GridRow(alignment:.bottom)
+                                {
+
+                                    Text("\(String(describing: dictSqlResultRow["tid"]).stripOptionalStringWrapper())")
+                                    Text("\(String(describing: dictSqlResultRow["pid"]).stripOptionalStringWrapper())")
+                                    Text("\(String(describing: dictSqlResultRow["superid"]).stripOptionalStringWrapper())")
+                                    Text("\(String(describing: dictSqlResultRow["type"]).stripOptionalStringWrapper())")
+                                    Text("\(String(describing: dictSqlResultRow["vdate"]).stripOptionalStringWrapper())")
+                                    Text("\(String(describing: dictSqlResultRow["vstime"]).stripOptionalStringWrapper())")
+
+                                }
+                                .font(.caption2)
+
+                            }
+
+                        }
+                        .padding()
+
+                    }
+
+                }
+            
             }
 
             Spacer()
@@ -259,6 +342,8 @@ struct AppMySqlDataView: View
 
         // Issue the 'test' SQL 'query' statement and display the results in the log...
 
+        var listMySQLResultRows:[[String:Any]] = [[String:Any]]()
+
         self.xcgLogMsg("\(sCurrMethodDisp) Calling 'self.mySqlDatabaseManager.executeQuery(query:)' with a SQL 'test' statement 'self.sSqlSelectStatement' of [\(self.sSqlSelectStatement)]...")
 
         do
@@ -268,6 +353,62 @@ struct AppMySqlDataView: View
             
             self.xcgLogMsg("\(sCurrMethodDisp) Called  'self.mySqlDatabaseManager.executeQuery(query:)' with a SQL 'test' statement 'self.sSqlSelectStatement' of [\(self.sSqlSelectStatement)] with returned result(s) 'mySqlResultRows' of [\(mySqlResultRows)]...")
             
+            self.xcgLogMsg("\(sCurrMethodDisp) Enumerating each returned 'result' Rowa' Column 'definitions'...")
+            
+            var cMySqlResultRows:Int = 0
+            
+            for mySqlResultRow in mySqlResultRows
+            {
+                
+                cMySqlResultRows += 1
+
+                if (self.bInternalTest == true)
+                {
+                
+                    let listAllColumnDefinitionaInRow:[MySQLProtocol.ColumnDefinition41] = mySqlResultRow.columnDefinitions
+
+                    var cMySqlResultRowsColumnsDefs:Int = 0
+
+                    for mySqlResultRowColumnDefinition in listAllColumnDefinitionaInRow
+                    {
+
+                        cMySqlResultRowsColumnsDefs += 1
+
+                        self.xcgLogMsg("\(sCurrMethodDisp) Row #(\(cMySqlResultRows)) has Column #(\(cMySqlResultRowsColumnsDefs)) defined as 'mySqlResultRowColumnDefinition' of [\(mySqlResultRowColumnDefinition)]...")
+
+                    }
+                
+                    let sqlResultRow:SQLRow           = mySqlResultRow.sql()
+                    let listSqlResultColumns:[String] = sqlResultRow.allColumns
+
+                    var cMySqlResultRowsColumnsNames:Int = 0
+
+                    for sSqlResultRowColumnName in listSqlResultColumns
+                    {
+
+                        cMySqlResultRowsColumnsNames += 1
+
+                        self.xcgLogMsg("\(sCurrMethodDisp) Row #(\(cMySqlResultRows)) has Column #(\(cMySqlResultRowsColumnsNames)) with a name as 'sSqlResultRowColumnName' of [\(sSqlResultRowColumnName)]...")
+
+                        let mySqlResultRowColumnValues:[ByteBuffer?] = mySqlResultRow.values
+
+                        self.xcgLogMsg("\(sCurrMethodDisp) Row #(\(cMySqlResultRows)) has Column #(\(cMySqlResultRowsColumnsNames)) with a name as 'sSqlResultRowColumnName' of [\(sSqlResultRowColumnName)] and Column value(s) 'mySqlResultRowColumnValues' of [\(mySqlResultRowColumnValues)]...")
+
+                    //  mySqlResultRow.
+                    //  let sqlColumnResultValue = sqlResultRow.decode(column:sSqlResultRowColumnName)
+
+                    }
+
+                }
+
+                let dictMySqlResultRow:[String:Any] = mySqlResultRow.toDictionary()
+
+                self.xcgLogMsg("\(sCurrMethodDisp) Row #(\(cMySqlResultRows)) has a dictionary of #(\(dictMySqlResultRow.count)) Columns of data of [\(dictMySqlResultRow)]...")
+
+                listMySQLResultRows.append(dictMySqlResultRow)
+                
+            }
+            
         }
         catch
         {
@@ -275,10 +416,12 @@ struct AppMySqlDataView: View
             self.xcgLogMsg("\(sCurrMethodDisp) Called  'self.mySqlDatabaseManager.executeQuery(query:)' with a SQL 'test' statement 'self.sSqlSelectStatement' of [\(self.sSqlSelectStatement)] -  statement execution failed...")
             
         }
+
+        self.listMySQLResultRows = listMySQLResultRows
         
         // Exit...
 
-        self.xcgLogMsg("\(sCurrMethodDisp) Exiting...")
+        self.xcgLogMsg("\(sCurrMethodDisp) Exiting - returned 'self.listMySQLResultRows' has #(\(self.listMySQLResultRows.count)) row(s) from a 'listMySQLResultRows' that has #(\(listMySQLResultRows.count)) row(s)...")
 
         return
 

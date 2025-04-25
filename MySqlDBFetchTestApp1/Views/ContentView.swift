@@ -16,7 +16,7 @@ struct ContentView: View
     {
         
         static let sClsId        = "ContentView"
-        static let sClsVers      = "v1.0108"
+        static let sClsVers      = "v1.0201"
         static let sClsDisp      = sClsId+".("+sClsVers+"): "
         static let sClsCopyRight = "Copyright (C) JustMacApps 2023-2025. All Rights Reserved."
         static let bClsTrace     = true
