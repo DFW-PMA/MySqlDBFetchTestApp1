@@ -18,7 +18,7 @@ struct AppMySqlDataView: View
     {
         
         static let sClsId        = "AppMySqlDataView"
-        static let sClsVers      = "v1.0401"
+        static let sClsVers      = "v1.0404"
         static let sClsDisp      = sClsId+".("+sClsVers+"): "
         static let sClsCopyRight = "Copyright © JustMacApps 2023-2025. All rights reserved."
         static let bClsTrace     = true
@@ -313,14 +313,14 @@ struct AppMySqlDataView: View
                                     Text("\(String(describing: dictSqlResultRow["vstime"]).stripOptionalStringWrapper().stripStringWrapper(sWrapperCharacters:"\""))")
 
                                 }
-                                .gridCellUnsizedAxes(.horizontal)
+                            //  .gridCellUnsizedAxes(.horizontal)
                                 .font(.caption2)
 
                             }
                             .scaledToFill()
 
                         }
-                        .gridCellUnsizedAxes(.horizontal)
+                    //  .gridCellUnsizedAxes(.horizontal)
                         .padding()
 
                     }
