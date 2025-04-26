@@ -317,6 +317,7 @@ struct AppMySqlDataView: View
                                 .font(.caption2)
 
                             }
+                            .scaledToFill()
 
                         }
                         .gridCellUnsizedAxes(.horizontal)
