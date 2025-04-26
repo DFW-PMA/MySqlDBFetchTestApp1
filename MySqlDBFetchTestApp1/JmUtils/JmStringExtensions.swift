@@ -27,7 +27,7 @@ enum StringCleaning
     
 }
 
-// Extension class to add extra method(s) to String - v8.0301.
+// Extension class to add extra method(s) to String - v8.0401.
 
 extension String
 {
@@ -362,9 +362,7 @@ extension String
 
         if (self.count < 1)
         {
-        
             return self
-        
         }
 
         let sOptionalStringPrefix:String = "Optional("
@@ -384,5 +382,36 @@ extension String
         return String(self[indexOptionalStart..<indexOptionalEnd])
 
     }   // End of func stripOptionalStringWrapper()->String.
+
+    func stripStringWrapper(sWrapperCharacters:String = "")->String
+    {
+
+        if (self.count < 1)
+        {
+            return self
+        }
+
+        if (sWrapperCharacters.count < 1)
+        {
+            return self
+        }
+
+        let sOptionalStringPrefix:String = sWrapperCharacters
+        let sOptionalStringSuffix:String = sWrapperCharacters
+
+        guard self.hasPrefix(sOptionalStringPrefix) && self.hasSuffix(sOptionalStringSuffix)
+        else
+        {
+            return self
+        }
+
+        // Remove 'sWrapperCharacters' from the start and from the end...
+
+        let indexOptionalStart = self.index(self.startIndex, offsetBy:sOptionalStringPrefix.count)
+        let indexOptionalEnd   = self.index(self.endIndex,   offsetBy:-(sOptionalStringSuffix.count))
+
+        return String(self[indexOptionalStart..<indexOptionalEnd])
+
+    }   // End of func stripStringWrapper(sWrapperCharacters:String)->String.
 
 }   // End of extension String.

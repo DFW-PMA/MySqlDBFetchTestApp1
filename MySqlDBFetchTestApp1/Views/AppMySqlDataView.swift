@@ -18,7 +18,7 @@ struct AppMySqlDataView: View
     {
         
         static let sClsId        = "AppMySqlDataView"
-        static let sClsVers      = "v1.0310"
+        static let sClsVers      = "v1.0401"
         static let sClsDisp      = sClsId+".("+sClsVers+"): "
         static let sClsCopyRight = "Copyright © JustMacApps 2023-2025. All rights reserved."
         static let bClsTrace     = true
@@ -289,6 +289,7 @@ struct AppMySqlDataView: View
                                     .underline()
 
                             }
+                            .gridCellUnsizedAxes(.horizontal)
                             .font(.footnote) 
 
                             // Item Rows:
@@ -304,19 +305,21 @@ struct AppMySqlDataView: View
                                 GridRow(alignment:.bottom)
                                 {
 
-                                    Text("\(String(describing: dictSqlResultRow["tid"]).stripOptionalStringWrapper())")
-                                    Text("\(String(describing: dictSqlResultRow["pid"]).stripOptionalStringWrapper())")
-                                    Text("\(String(describing: dictSqlResultRow["superid"]).stripOptionalStringWrapper())")
-                                    Text("\(String(describing: dictSqlResultRow["type"]).stripOptionalStringWrapper())")
-                                    Text("\(String(describing: dictSqlResultRow["vdate"]).stripOptionalStringWrapper())")
-                                    Text("\(String(describing: dictSqlResultRow["vstime"]).stripOptionalStringWrapper())")
+                                    Text("\(String(describing: dictSqlResultRow["tid"]).stripOptionalStringWrapper().stripStringWrapper(sWrapperCharacters:"\""))")
+                                    Text("\(String(describing: dictSqlResultRow["pid"]).stripOptionalStringWrapper().stripStringWrapper(sWrapperCharacters:"\""))")
+                                    Text("\(String(describing: dictSqlResultRow["superid"]).stripOptionalStringWrapper().stripStringWrapper(sWrapperCharacters:"\""))")
+                                    Text("\(String(describing: dictSqlResultRow["type"]).stripOptionalStringWrapper().stripStringWrapper(sWrapperCharacters:"\""))")
+                                    Text("\(String(describing: dictSqlResultRow["vdate"]).stripOptionalStringWrapper().stripStringWrapper(sWrapperCharacters:"\""))")
+                                    Text("\(String(describing: dictSqlResultRow["vstime"]).stripOptionalStringWrapper().stripStringWrapper(sWrapperCharacters:"\""))")
 
                                 }
+                                .gridCellUnsizedAxes(.horizontal)
                                 .font(.caption2)
 
                             }
 
                         }
+                        .gridCellUnsizedAxes(.horizontal)
                         .padding()
 
                     }
