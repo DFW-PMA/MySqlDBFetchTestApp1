@@ -18,7 +18,7 @@ struct AppMySqlDataView: View
     {
         
         static let sClsId        = "AppMySqlDataView"
-        static let sClsVers      = "v1.0404"
+        static let sClsVers      = "v1.0409"
         static let sClsDisp      = sClsId+".("+sClsVers+"): "
         static let sClsCopyRight = "Copyright © JustMacApps 2023-2025. All rights reserved."
         static let bClsTrace     = true
@@ -267,7 +267,8 @@ struct AppMySqlDataView: View
                     VStack(alignment:.leading)
                     {
 
-                        Grid(alignment:.leadingFirstTextBaseline, horizontalSpacing:5, verticalSpacing: 3)
+                    //  Grid(alignment:.leadingFirstTextBaseline, horizontalSpacing:5, verticalSpacing: 3)
+                        Grid(alignment:.centerFirstTextBaseline, horizontalSpacing:5, verticalSpacing: 3)
                         {
 
                             // Column Headings:
@@ -289,8 +290,9 @@ struct AppMySqlDataView: View
                                     .underline()
 
                             }
-                            .gridCellUnsizedAxes(.horizontal)
-                            .font(.footnote) 
+                        //  .gridCellUnsizedAxes(.horizontal)
+                            .font(.footnote)
+                            .frame(maxWidth:.infinity, alignment:.center)
 
                             // Item Rows:
 
@@ -315,6 +317,7 @@ struct AppMySqlDataView: View
                                 }
                             //  .gridCellUnsizedAxes(.horizontal)
                                 .font(.caption2)
+                            //  .frame(maxWidth:.infinity, alignment:.center)
 
                             }
                             .scaledToFill()
@@ -324,8 +327,10 @@ struct AppMySqlDataView: View
                         .padding()
 
                     }
+                    .frame(maxWidth:.infinity, alignment:.center)
 
                 }
+                .frame(maxWidth:.infinity, alignment:.center)
             
             }
 
