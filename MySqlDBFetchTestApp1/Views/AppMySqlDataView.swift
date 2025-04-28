@@ -18,7 +18,7 @@ struct AppMySqlDataView: View
     {
         
         static let sClsId        = "AppMySqlDataView"
-        static let sClsVers      = "v1.0506"
+        static let sClsVers      = "v1.0512"
         static let sClsDisp      = sClsId+".("+sClsVers+"): "
         static let sClsCopyRight = "Copyright © JustMacApps 2023-2025. All rights reserved."
         static let bClsTrace     = true
@@ -26,21 +26,40 @@ struct AppMySqlDataView: View
         
     }
 
+    // 'Internal' Trace flag:
+
+    private 
+    var bInternalTraceFlag:Bool                                        = false
+
     // App Data field(s):
 
+    //  @Environment(\.dismiss)      var dismiss
     @Environment(\.presentationMode) var presentationMode
+    @Environment(\.openURL)          var openURL
+    @Environment(\.openWindow)       var openWindow
 
-                private var bInternalTest:Bool                        = false
+    enum FocusedFields
+    {
+       case sqlStatement
+    }
+    
+    @FocusState  private var focusedField:FocusedFields?
 
-    @State      private var isAppRunSQLStatementAlertShowing:Bool     = false
-  
-    @State      private var sSqlSelectStatement:String                = 
-                            "select * from visit where tid = 261 and vdate between \"2025-04-22\" and \"2025-04-25\" and type != 32;"
+    @State       private var cAppClearSqlStatementButtonPresses:Int    = 0
 
-    @State      private var listMySQLResultRows:[[String:Any]]        = [[String:Any]]()
+    @State       private var isAppClearSqlStatementShowingAlert:Bool   = false
+    @State       private var isAppRunSQLStatementAlertShowing:Bool     = false
+    
+    @AppStorage("appSqlStatement1")
+                         var sSqlSelectStatement:String                = ""
 
-                        var mySqlDatabaseManager:MySqlDatabaseManager = MySqlDatabaseManager.ClassSingleton.appMySqlDatabaseManager
-//                      var jmAppDelegateVisitor:JmAppDelegateVisitor = JmAppDelegateVisitor.ClassSingleton.appDelegateVisitor
+                 private var sSqlSelectStatementDefault:String         = 
+                             "select * from visit where tid = 261 and vdate between \"2025-04-19\" and \"2025-04-26\" and type = 1;"
+
+    @State       private var listMySQLResultRows:[[String:Any]]        = [[String:Any]]()
+
+                         var mySqlDatabaseManager:MySqlDatabaseManager = MySqlDatabaseManager.ClassSingleton.appMySqlDatabaseManager
+//                       var jmAppDelegateVisitor:JmAppDelegateVisitor = JmAppDelegateVisitor.ClassSingleton.appDelegateVisitor
     
     init()
     {
@@ -92,27 +111,69 @@ struct AppMySqlDataView: View
             HStack(alignment:.center)
             {
 
+                Button
+                {
+
+                    self.cAppClearSqlStatementButtonPresses += 1
+
+                    let _ = self.xcgLogMsg("\(ClassInfo.sClsDisp):AppMySqlDataView.Button(Xcode).'App Clear SQL Result(s) List'.#(\(self.cAppClearSqlStatementButtonPresses))'...")
+
+                    self.listMySQLResultRows = [[String:Any]]()
+
+                    self.isAppClearSqlStatementShowingAlert = true
+
+                }
+                label:
+                {
+
+                    VStack(alignment:.center)
+                    {
+
+                        Label("", systemImage: "clear")
+                            .help(Text("Clear the SQL Result(s) List..."))
+                            .imageScale(.small)
+
+                        Text("Clear SQL Result(s)")
+                            .font(.caption2)
+
+                    }
+
+                }
+                .alert("App SQL Result(s) List has been 'Cleared'...", isPresented:$isAppClearSqlStatementShowingAlert)
+                {
+
+                    Button("Ok", role:.cancel) { }
+
+                }
+            #if os(macOS)
+                .buttonStyle(.borderedProminent)
+                .padding()
+            //  .background(???.isPressed ? .blue : .gray)
+                .cornerRadius(10)
+                .foregroundColor(Color.primary)
+            #endif
+
                 Spacer()
 
                 if #available(iOS 17.0, *)
                 {
 
-                    Image(ImageResource(name: "Gfx/AppIcon", bundle: Bundle.main))
+                    Image(ImageResource(name:"Gfx/AppIcon", bundle:Bundle.main))
                         .resizable()
                         .scaledToFit()
                         .containerRelativeFrame(.horizontal)
                             { size, axis in
-                                size * 0.030
+                                size * 0.040
                             }
 
                 }
                 else
                 {
 
-                    Image(ImageResource(name: "Gfx/AppIcon", bundle: Bundle.main))
+                    Image(ImageResource(name:"Gfx/AppIcon", bundle:Bundle.main))
                         .resizable()
                         .scaledToFit()
-                        .frame(width:30, height: 30, alignment:.center)
+                        .frame(width:40, height:40, alignment:.center)
 
                 }
 
@@ -159,8 +220,43 @@ struct AppMySqlDataView: View
             Text("")
             Text("SQL Statement to 'test':")
             Text("")
-            Text("[\(self.sSqlSelectStatement)]")
-                .font(.caption)
+
+        //  Text("[\(self.sSqlSelectStatement)]")
+            TextField("SQL Statement...", text:$sSqlSelectStatement)
+            //  .font(.caption) 
+                .disableAutocorrection(true)
+                .focused($focusedField, equals:.sqlStatement)
+                .onAppear
+                {
+                    if (self.sSqlSelectStatement.count < 1)
+                    {
+                        self.sSqlSelectStatement = self.sSqlSelectStatementDefault
+                    }
+                    
+                    let _ = self.xcgLogMsg("\(ClassInfo.sClsDisp).onAppear #1 - 'self.sSqlSelectStatement' is [\(self.sSqlSelectStatement)]...")
+
+                    focusedField = nil
+                }
+                .onChange(of: self.sSqlSelectStatement)
+                {
+                    let _ = self.xcgLogMsg("\(ClassInfo.sClsDisp).onChange #1 - 'self.sSqlSelectStatement' is [\(self.sSqlSelectStatement)]...")
+
+                    focusedField = .sqlStatement
+                }
+                .onSubmit
+                {
+                    let _ = self.xcgLogMsg("\(ClassInfo.sClsDisp).onSubmit #1 - 'self.sSqlSelectStatement' is [\(self.sSqlSelectStatement)]...")
+
+                    focusedField = .sqlStatement
+
+                    let _ = self.xcgLogMsg("\(ClassInfo.sClsDisp).onSubmit #1 - User pressed 'Enter' on the TextField to 'run' the SQL statement - running...")
+
+                    Task
+                    {
+                        await self.executeMySqlTestStatement()
+                    }
+                }
+
             Text("")
 
             HStack(alignment:.center)
@@ -193,7 +289,7 @@ struct AppMySqlDataView: View
 
                             Text("'test' the SQL Statement...")
                                 .bold()
-                                .font(.caption)
+                                .font(.footnote)
                                 .foregroundColor(.red)
 
                             Spacer()
@@ -212,20 +308,14 @@ struct AppMySqlDataView: View
                     }
                     Button("Ok")
                     {
-
                         let _ = self.xcgLogMsg("\(ClassInfo.sClsDisp) User pressed 'Ok' to 'run' the SQL statement - running...")
 
                         Task
                         {
-                            
-                        //  self.listMySQLResultRows = await self.executeMySqlTestStatement()
-                            
                             await self.executeMySqlTestStatement()
-                            
                         }
                         
                     //  self.presentationMode.wrappedValue.dismiss()
-
                     }
 
                 }
@@ -375,7 +465,7 @@ struct AppMySqlDataView: View
                 
                 cMySqlResultRows += 1
 
-                if (self.bInternalTest == true)
+                if (self.bInternalTraceFlag == true)
                 {
                 
                     let listAllColumnDefinitionaInRow:[MySQLProtocol.ColumnDefinition41] = mySqlResultRow.columnDefinitions
