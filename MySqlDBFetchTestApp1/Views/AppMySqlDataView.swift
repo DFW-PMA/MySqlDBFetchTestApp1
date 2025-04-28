@@ -18,7 +18,7 @@ struct AppMySqlDataView: View
     {
         
         static let sClsId        = "AppMySqlDataView"
-        static let sClsVers      = "v1.0409"
+        static let sClsVers      = "v1.0506"
         static let sClsDisp      = sClsId+".("+sClsVers+"): "
         static let sClsCopyRight = "Copyright © JustMacApps 2023-2025. All rights reserved."
         static let bClsTrace     = true
@@ -94,6 +94,30 @@ struct AppMySqlDataView: View
 
                 Spacer()
 
+                if #available(iOS 17.0, *)
+                {
+
+                    Image(ImageResource(name: "Gfx/AppIcon", bundle: Bundle.main))
+                        .resizable()
+                        .scaledToFit()
+                        .containerRelativeFrame(.horizontal)
+                            { size, axis in
+                                size * 0.030
+                            }
+
+                }
+                else
+                {
+
+                    Image(ImageResource(name: "Gfx/AppIcon", bundle: Bundle.main))
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width:30, height: 30, alignment:.center)
+
+                }
+
+                Spacer()
+
                 Button
                 {
 
@@ -128,40 +152,15 @@ struct AppMySqlDataView: View
 
             }
 
-        //  Spacer()
-
-            if #available(iOS 17.0, *)
-            {
-
-                Image(ImageResource(name: "Gfx/AppIcon", bundle: Bundle.main))
-                    .resizable()
-                    .scaledToFit()
-                    .containerRelativeFrame(.horizontal)
-                        { size, axis in
-                            size * 0.040
-                        }
-
-            }
-            else
-            {
-
-                Image(ImageResource(name: "Gfx/AppIcon", bundle: Bundle.main))
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width:40, height: 40, alignment:.center)
-
-            }
-
-            Text("")
-            Text("\(JmXcodeBuildSettings.jmAppDisplayName)")
-                .bold()
-            Text("")
+        //  Text("")
+        //  Text("\(JmXcodeBuildSettings.jmAppDisplayName)")
+        //      .bold()
+        //  Text("")
             Text("")
             Text("SQL Statement to 'test':")
             Text("")
             Text("[\(self.sSqlSelectStatement)]")
                 .font(.caption)
-            Text("")
             Text("")
 
             HStack(alignment:.center)
@@ -193,6 +192,7 @@ struct AppMySqlDataView: View
                             Spacer()
 
                             Text("'test' the SQL Statement...")
+                                .bold()
                                 .font(.caption)
                                 .foregroundColor(.red)
 
@@ -239,7 +239,6 @@ struct AppMySqlDataView: View
             }
 
             Text("")
-            Text("")
 
             HStack(alignment:.center)
             {
@@ -255,7 +254,6 @@ struct AppMySqlDataView: View
 
             }
 
-            Text("")
             Text("")
 
             if (self.listMySQLResultRows.count > 0)
@@ -276,13 +274,15 @@ struct AppMySqlDataView: View
                             GridRow 
                             {
 
-                                Text("TID")
-                                    .underline()
                                 Text("PID")
+                                    .underline()
+                                Text("TID")
                                     .underline()
                                 Text("SID")
                                     .underline()
                                 Text("Type")
+                                    .underline()
+                                Text("Billed")
                                     .underline()
                                 Text("VDate")
                                     .underline()
@@ -296,34 +296,38 @@ struct AppMySqlDataView: View
 
                             // Item Rows:
 
-                        //  List(self.listMySQLResultRows, id:\.self)
-                        //  ForEach(self.listMySQLResultRows, id:\.self)
-                        //  List(self.listMySQLResultRows)
                             ForEach(0..<self.listMySQLResultRows.count, id:\.self)
                             { index in
                                 
-                                let dictSqlResultRow = self.listMySQLResultRows[index]
+                                let dictSqlResultRow           = self.listMySQLResultRows[index]
+                                let sSqlResultRowType:String   = String(describing: dictSqlResultRow["type"]).stripOptionalStringWrapper().stripStringWrapper(sWrapperCharacters:"\"")
+                                let bSqlResultRowTypeGood:Bool = ((sSqlResultRowType == "1") ? true : false)
 
                                 GridRow(alignment:.bottom)
                                 {
 
-                                    Text("\(String(describing: dictSqlResultRow["tid"]).stripOptionalStringWrapper().stripStringWrapper(sWrapperCharacters:"\""))")
                                     Text("\(String(describing: dictSqlResultRow["pid"]).stripOptionalStringWrapper().stripStringWrapper(sWrapperCharacters:"\""))")
+                                    Text("\(String(describing: dictSqlResultRow["tid"]).stripOptionalStringWrapper().stripStringWrapper(sWrapperCharacters:"\""))")
                                     Text("\(String(describing: dictSqlResultRow["superid"]).stripOptionalStringWrapper().stripStringWrapper(sWrapperCharacters:"\""))")
+
                                     Text("\(String(describing: dictSqlResultRow["type"]).stripOptionalStringWrapper().stripStringWrapper(sWrapperCharacters:"\""))")
+                                        .foregroundStyle((bSqlResultRowTypeGood == true) ? .green : .red)
+
+                                    Text("\(String(describing: dictSqlResultRow["billed"]).stripOptionalStringWrapper().stripStringWrapper(sWrapperCharacters:"\""))")
+
                                     Text("\(String(describing: dictSqlResultRow["vdate"]).stripOptionalStringWrapper().stripStringWrapper(sWrapperCharacters:"\""))")
+                                        .foregroundStyle((bSqlResultRowTypeGood == true) ? .green : .red)
+
                                     Text("\(String(describing: dictSqlResultRow["vstime"]).stripOptionalStringWrapper().stripStringWrapper(sWrapperCharacters:"\""))")
+                                        .foregroundStyle((bSqlResultRowTypeGood == true) ? .green : .red)
 
                                 }
-                            //  .gridCellUnsizedAxes(.horizontal)
                                 .font(.caption2)
-                            //  .frame(maxWidth:.infinity, alignment:.center)
 
                             }
                             .scaledToFill()
 
                         }
-                    //  .gridCellUnsizedAxes(.horizontal)
                         .padding()
 
                     }

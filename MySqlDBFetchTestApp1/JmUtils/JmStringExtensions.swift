@@ -27,7 +27,7 @@ enum StringCleaning
     
 }
 
-// Extension class to add extra method(s) to String - v8.0401.
+// Extension class to add extra method(s) to String - v8.0502.
 
 extension String
 {
@@ -414,4 +414,60 @@ extension String
 
     }   // End of func stripStringWrapper(sWrapperCharacters:String)->String.
 
+    func extractEmbeddedContent(from firstPattern:String = "", after lastPattern:String = "")->String
+    {
+        
+        // Check parameter(s)...
+        
+        if (firstPattern.count < 1)
+        {
+            return ""
+        }
+        
+        if (lastPattern.count < 1)
+        {
+            return ""
+        }
+        
+        // Find the range of the first pattern...
+        
+        let firstPatternRange = self.range(of:firstPattern, options:.caseInsensitive)
+        
+        if (firstPatternRange == nil)
+        {
+            
+            print("...bad 'firstPatternRange' - 'self' is [\(self)] - 'firstPattern' is [\(firstPattern)]... - Error!")
+            
+            return ""
+            
+        }
+        
+        // Get the 'remaining' substring after the first pattern...
+        
+        let afterFirstPatternIndex      = firstPatternRange!.upperBound
+        let remainingString:SubSequence = self[afterFirstPatternIndex...]
+        
+        // Find the range of the last pattern in the 'remaining' substring...
+        
+        let lastPatternRange = remainingString.range(of:lastPattern, options:.caseInsensitive)
+        
+        if (lastPatternRange == nil)
+        {
+            
+            print("...bad 'lastPatternRange' - 'remainingString' is [\(remainingString)] - 'lastPattern' is [\(lastPattern)]... - Error!")
+            
+            return ""
+            
+        }
+        
+        // Extract the content between the 2 patterns...
+        
+        let beforeLastPatternIndex       = lastPatternRange!.lowerBound
+        let extractedContent:SubSequence = remainingString[..<beforeLastPatternIndex]
+        let sReturnString:String         = String(extractedContent)
+        
+        return sReturnString
+        
+    }   // End of func extractEmbeddedContent(from firstPattern:String, after lastPattern:String)->String.
+    
 }   // End of extension String.

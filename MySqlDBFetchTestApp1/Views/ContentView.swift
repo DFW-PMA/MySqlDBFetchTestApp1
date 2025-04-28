@@ -16,7 +16,7 @@ struct ContentView: View
     {
         
         static let sClsId        = "ContentView"
-        static let sClsVers      = "v1.0201"
+        static let sClsVers      = "v1.0301"
         static let sClsDisp      = sClsId+".("+sClsVers+"): "
         static let sClsCopyRight = "Copyright (C) JustMacApps 2023-2025. All Rights Reserved."
         static let bClsTrace     = true
@@ -145,6 +145,13 @@ struct ContentView: View
                     let _ = self.xcgLogMsg("\(ClassInfo.sClsDisp):Button(Xcode).'App About'.#(\(self.cAppMySqlDataButtonPresses))...")
       
                     self.isAppMySqlDataViewModal.toggle()
+
+                #if os(macOS)
+                
+                    // Using -> @Environment(\.openWindow)var openWindow and 'openWindow(id:"...")' on MacOS...
+                    openWindow(id:"AppMySqlDataView")
+                
+                #endif
       
                 }
                 label:
@@ -163,13 +170,13 @@ struct ContentView: View
                     }
                     
                 }
-            #if os(macOS)
-                .sheet(isPresented:$isAppMySqlDataViewModal, content:
-                    {
-                        AppMySqlDataView()
-                    }
-                )
-            #endif
+        //  #if os(macOS)
+        //      .sheet(isPresented:$isAppMySqlDataViewModal, content:
+        //          {
+        //              AppMySqlDataView()
+        //          }
+        //      )
+        //  #endif
             #if os(iOS)
                 .fullScreenCover(isPresented:$isAppMySqlDataViewModal)
                 {
