@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>CFBundleGetInfoString</key>
+	<string>Huh? What is the 'Get Info' string?</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
@@ -13,11 +15,14 @@
 	</array>
 	<key>NSUserNotificationsUsageDescription</key>
 	<string>This App usees User Notifications to provide Alerts</string>
+	<key>UIApplicationSupportsMultipleScenes</key>
+	<true/>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>remote-notification</string>
 		<string>processing</string>
 		<string>audio</string>
+		<string>fetch</string>
 	</array>
 </dict>
 </plist>
