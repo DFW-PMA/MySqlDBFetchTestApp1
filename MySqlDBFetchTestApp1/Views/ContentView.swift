@@ -9,14 +9,14 @@
 import Foundation
 import SwiftUI
 
-struct ContentView: View
+struct ContentView:View
 {
     
     struct ClassInfo
     {
         
         static let sClsId        = "ContentView"
-        static let sClsVers      = "v1.0301"
+        static let sClsVers      = "v1.0401"
         static let sClsDisp      = sClsId+".("+sClsVers+"): "
         static let sClsCopyRight = "Copyright (C) JustMacApps 2023-2025. All Rights Reserved."
         static let bClsTrace     = true
@@ -142,7 +142,7 @@ struct ContentView: View
       
                     self.cAppMySqlDataButtonPresses += 1
       
-                    let _ = self.xcgLogMsg("\(ClassInfo.sClsDisp):Button(Xcode).'App About'.#(\(self.cAppMySqlDataButtonPresses))...")
+                    let _ = self.xcgLogMsg("\(ClassInfo.sClsDisp):Button(Xcode).'App MySql Data View'.#(\(self.cAppMySqlDataButtonPresses))...")
       
                     self.isAppMySqlDataViewModal.toggle()
 

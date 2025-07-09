@@ -18,7 +18,7 @@ struct AppMySqlDataView: View
     {
         
         static let sClsId        = "AppMySqlDataView"
-        static let sClsVers      = "v1.0512"
+        static let sClsVers      = "v1.0601"
         static let sClsDisp      = sClsId+".("+sClsVers+"): "
         static let sClsCopyRight = "Copyright © JustMacApps 2023-2025. All rights reserved."
         static let bClsTrace     = true
@@ -54,7 +54,7 @@ struct AppMySqlDataView: View
                          var sSqlSelectStatement:String                = ""
 
                  private var sSqlSelectStatementDefault:String         = 
-                             "select * from visit where tid = 261 and vdate between \"2025-04-19\" and \"2025-04-26\" and type = 1;"
+                             "select * from visit where tid = 261 and vdate between \"2025-06-28\" and \"2025-07-05\" and type = 1;"
 
     @State       private var listMySQLResultRows:[[String:Any]]        = [[String:Any]]()
 

@@ -17,7 +17,7 @@ class MySqlDatabaseManager
     {
 
         static let sClsId        = "MySqlDatabaseManager"
-        static let sClsVers      = "v1.0207"
+        static let sClsVers      = "v1.0301"
         static let sClsDisp      = sClsId+".("+sClsVers+"): "
         static let sClsCopyRight = "Copyright (C) JustMacApps 2023-2025. All Rights Reserved."
         static let bClsTrace     = false
