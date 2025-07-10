@@ -6,6 +6,79 @@
 //  Copyright © JustMacApps 2023-2025. All rights reserved.
 //
 
+// ==========================================================================================================
+//
+//  ----
+//  NOTE:
+//  ----
+//
+//  This MySql DB Manager is built on 'mysql-kit' on GitHub
+//      > https://github.com/vapor/mysql-kit.git
+//
+//  The framework it uses takes a small 'test' app from ~65 build steps under Xcode
+//  to ~1425 build steps. I was looking at REST as a way to reduce the build size
+//  and build time of the app. The package also pulls 'mysql-nio' and that stack pulls
+//  a total of 14 packages (it's a Vapor stack).
+//
+//  Claude:
+//  ------
+//
+//      Based on my search, there is a lighter-weight alternative to 'mysql-kit' you could consider:
+//
+//          - OHMySQL - Potentially Lighter Option
+//
+//                OHMySQL is a Swift + MySQL library that supports iOS, macOS and Mac Catalyst.
+//
+//                    > Swift Package Index: https://swiftpackageindex.com/vapor/mysql-kit
+//                    > GitHub link(s):      https://github.com/oleghnidets/OHMySQL
+//                                           https://github.com/oleghnidets/OHMySQL/tree/master
+//
+//                          <<< The library in GitHub also has a 'demo' Sample App... >>>
+//
+//                The library supports Objective-C and Swift, iOS and macOS, and allows you to
+//                connect to your remote MySQL database using OHMySQL API in an easy and
+//                object-oriented way.
+//
+//                    > Connecting iOS App to MySql DB:
+//                          https://medium.com/@joseortizcosta/connecting-ios-app-to-mysql-database-with-swift-5-using-protocol-delegation-and-mvc-architectural-259dc32fcc4b
+//
+//                Key advantages:
+//                --------------
+//
+//                    - It's described as "The Objective-C wrapper for mysqlclient (MySQL C API)" 
+//                    - Likely has fewer dependencies than the Vapor stack
+//                    - More direct approach without the event-driven networking stack
+//
+//                The Problem with 'mysql-kit'
+//                ----------------------------
+//
+//                    The reason 'mysql-kit pulls' 14 packages is because it's part of the Vapor ecosystem:
+//
+//                        - mysql-kit → mysql-nio → SwiftNIO → async-kit → sql-kit → fluent-kit, etc.
+//                        - It's designed for high-performance server applications, not mobile apps
+//                        - The entire SwiftNIO event-driven networking stack is overkill for iOS
+//
+//                Recommended Approach
+//                --------------------
+//
+//                    Given your constraints (no server-side control, need to reduce build time), 
+//                    I'd suggest:
+//
+//                        1. Try OHMySQL first - 
+//                               It's likely much lighter since it's a direct wrapper around MySQL C API
+//                        2. If OHMySQL doesn't work,
+//                               seriously consider the REST API approach with URLSession -
+//                               it would get you back to ~65 build steps
+//
+//                Simple comparison:
+//                -----------------
+//
+//                    - mysql-kit:         14 packages, ~1425 build steps
+//                    - OHMySQL:           Likely 1-3 packages, significantly fewer build steps
+//                    - URLSession + REST: 0 additional packages, ~65 build steps
+//
+// ==========================================================================================================
+
 import Foundation
 import SwiftUI
 import MySQLKit
@@ -17,7 +90,7 @@ class MySqlDatabaseManager
     {
 
         static let sClsId        = "MySqlDatabaseManager"
-        static let sClsVers      = "v1.0301"
+        static let sClsVers      = "v1.0401"
         static let sClsDisp      = sClsId+".("+sClsVers+"): "
         static let sClsCopyRight = "Copyright (C) JustMacApps 2023-2025. All Rights Reserved."
         static let bClsTrace     = false
